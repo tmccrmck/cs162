@@ -7,7 +7,7 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
     int bytes = 0;
     char c;
     char lastline = ' ';
-    while(c = fgetc(infile), !feof(infile)){
+    while(c = fgetc(infile), c != EOF){
 	bytes += 1;
 	if(c == '\n'){
 	    lines += 1;
