@@ -18,8 +18,11 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 
 	lastline = c;
     }
+    if(strcmp(inname, "input") != 0)	
+        fprintf(ofile, " %d %d %d %s\n", lines, words, bytes, inname);
+    else
+	fprintf(ofile, " %d %d %d \n", lines, words, bytes);	
 	
-    fprintf(ofile, " %d %d %d %s\n", lines, words, bytes, inname);
 }
 
 int main (int argc, char *argv[]) {
@@ -29,11 +32,12 @@ int main (int argc, char *argv[]) {
 	FILE * output = fopen(argv[2], "w");
 	wc(output, input, argv[1]);
 	fclose(output);
+	fclose(input);
     } else if(argc == 2){
 	wc(stdout, input, argv[1]);
+	fclose(input);
     } else if(argc == 1){
 	wc(stdout, stdin, "input");
     }
-    /**fclose(input); **/
     return 0;
 }
