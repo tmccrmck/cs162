@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+
 void wc(FILE *ofile, FILE *infile, char *inname) {
     int lines = 0; 
     int words = 0; 
