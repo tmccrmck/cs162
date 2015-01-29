@@ -32,8 +32,8 @@ int main (int argc, char *argv[]) {
     } else if(argc == 2){
 	wc(stdout, input, argv[1]);
     } else if(argc == 1){
-	wc(stdout, stdin, "test");
+	wc(stdout, stdin, "input");
     }
-    fclose(input);
+    /**fclose(input); **/
     return 0;
 }
