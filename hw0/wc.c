@@ -15,13 +15,12 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	if(isspace(c) && !isspace(lastline)){
 	    words += 1;
 	}
-	if(c == '\0'){
-	    words -= 1;
-	}	
 
 
 	lastline = c;
     }
+    if(bytes == 1)
+	words ==1;
     if(strcmp(inname, "input") != 0)	
         fprintf(ofile, " %d %d %d %s\n", lines, words, bytes, inname);
     else
