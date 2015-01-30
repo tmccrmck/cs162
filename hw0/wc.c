@@ -12,7 +12,7 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	if(c == '\n'){
 	    lines += 1;
 	}
-	else if(isspace(c) && !isspace(lastline)){
+	if(isspace(c) && !isspace(lastline)){
 	    words += 1;
 	}
 
