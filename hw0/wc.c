@@ -2,7 +2,7 @@
 #include <ctype.h>
 
 void wc(FILE *ofile, FILE *infile, char *inname) {
-    int lines = 1; 
+    int lines = 0; 
     int words = 0; 
     int bytes = 0;
     char c;
