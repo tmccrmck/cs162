@@ -15,6 +15,11 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	if(isspace(c) && !isspace(lastline)){
 	    words += 1;
 	}
+	if(c == '\0'){
+	    bytes -= 1;
+	    words -= 1;
+	}	
+
 
 	lastline = c;
     }
