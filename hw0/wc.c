@@ -16,7 +16,6 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	    words += 1;
 	}
 	if(c == '\0'){
-	    bytes -= 1;
 	    words -= 1;
 	}	
 
