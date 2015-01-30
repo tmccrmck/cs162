@@ -9,9 +9,7 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
     char lastline = ' ';
     while(c = fgetc(infile), c != EOF){
 	bytes += 1;
-	if(c == '\0')
-	    continue;
-	else if(c == '\n'){
+	if(c == '\n'){
 	    lines += 1;
 	}
 	else if(isspace(c) && !isspace(lastline)){
