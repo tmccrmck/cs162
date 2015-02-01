@@ -1,0 +1,12 @@
+1. file format elf64, architecture x86-64
+
+2. Program Header, Dynamic Section, Version References, Sections, Symbol Table
+
+3. Symbol Table, 0x40073d
+
+4. Symbol Table, 0x40085c
+
+5. wc function has the same address as observed in gdb
+main  has the same start address as seen in gdb
+
+6. The heap and the stack don't get segments because they are dynamic data structures. Meaning that the compiler can't give out fixed memory addresses for them because no fixed layout exists. 

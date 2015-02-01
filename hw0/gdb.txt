@@ -1,0 +1,20 @@
+1. (FILE *) 0x602010
+
+2. I used 'whatis infile' which said it was a FILE object
+
+3.(FILE *) 0x7ffff7dd4400. This is different because it is stdout
+
+4. 0x40073d
+
+5. You see wc (with its arguments) at the top.
+And a register in main giving argc and argv.
+
+6. It shows stack level 0. The starting memory address of the stack frame.
+It shows the rip register which is used for the next instruction,
+and a saved rip for the return address.
+It has a arglist for the arguments of wc (ofile, infile, inname).
+And local variables for the current frame and saved registers.
+
+7. rax and rdi has the address of ofile
+rxc has infile
+rdx has inname 
