@@ -6,7 +6,7 @@ int main() {
     struct rlimit lim;
     
     int i = getrlimit(RLIMIT_STACK, &lim);
-    printf("stack size: %d\n",  (int)lim.rlim_cur / 1024);
+    printf("stack size: %d\n",  (int)lim.rlim_cur );
     int k = getrlimit(RLIMIT_NPROC, &lim);
     printf("process limit: %d\n", (int)lim.rlim_cur);
     int j = getrlimit(RLIMIT_NOFILE, &lim);
