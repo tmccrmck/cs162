@@ -6,6 +6,7 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
     int words = 0; 
     int bytes = 0;
     char c;
+    int nul_byte_seen = 0;
     char lastline = ' ';
     while(c = fgetc(infile), c != EOF){
 	bytes += 1;
@@ -15,13 +16,11 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	if(isspace(c) && !isspace(lastline)){
 	    words += 1;
 	}
-
+	if(c == '\0' && !isspace(lastline)){
+	    words -= 1;
+	}
 
 	lastline = c;
-    }
-    if(bytes == 1 && words == 0){
-	words = 1;
-	lines = 1;
     }
     if(strcmp(inname, "input") != 0)	
         fprintf(ofile, " %d %d %d %s\n", lines, words, bytes, inname);
