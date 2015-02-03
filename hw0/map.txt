@@ -8,11 +8,28 @@
 
 4. 48 bytes
 
-5. ?. The heap is growing upwards
+5. The heap is on top of the stack. The heap is growing upwards
 
 6. They are not contiguous because there is a difference of 112 bytes between their address while an int should only take up 3
 
 7. 
-stack
-~~~~~~~~~~
- 
+Higher addresses (0xFFFFFFFF)
+~~~~~~~~
+Stack (grows downward)
+
+
+~~~~~~~~~
+unused memory
+~~~~~~~~
+Heap (grows upwards)
+
+
+
+~~~~~~~~~
+bss (unititalized variables all zeros)
+~~~~~~~~~
+data (static variables)
+~~~~~~~~~
+text segment (executable binaries)
+~~~~~~~~~
+Lower adresses (0x00000000)

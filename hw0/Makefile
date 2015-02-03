@@ -7,3 +7,5 @@ all:
 clean:
 	rm -rf main map wc 
 
+check:
+	python check.py
