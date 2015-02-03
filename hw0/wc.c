@@ -22,8 +22,8 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 
 	lastline = c;
     }
-    if (!isspace(lastline))
-	bytes -=1;
+    if(words == 0 && bytes > 0 && !isspace(lastline))
+	words = 1;
     if(strcmp(inname, "input") != 0)	
         fprintf(ofile, " %d %d %d %s\n", lines, words, bytes, inname);
     else
