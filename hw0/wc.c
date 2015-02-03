@@ -19,12 +19,11 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
         if(c == '\0'){
 	    nul_byte_seen = 1;
 	}
-	if(words == 0 && bytes > 0 && nul_byte_seen == 1){
-	     words = 1;
-	}
 
 	lastline = c;
     }
+    if (words == 1 && bytes > 0)
+	bytes -=1;
     if(strcmp(inname, "input") != 0)	
         fprintf(ofile, " %d %d %d %s\n", lines, words, bytes, inname);
     else
