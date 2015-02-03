@@ -1,0 +1,35 @@
+1. main and recur are in .text
+
+2. .text is used for instructions that are going to be executed (ie functions)
+.data is for static variables
+.bss has unitialized variables that are all zeroes 
+
+3. The stack is growing downward as evidenced by the addresses getting smaller.
+
+4. 48 bytes
+
+5. The heap is on top of the stack. The heap is growing upwards
+
+6. They are not contiguous because there is a difference of 112 bytes between their address while an int should only take up 3
+
+7. 
+Higher addresses (0xFFFFFFFF)
+~~~~~~~~
+Stack (grows downward)
+
+
+~~~~~~~~~
+unused memory
+~~~~~~~~
+Heap (grows upwards)
+
+
+
+~~~~~~~~~
+bss (unititalized variables all zeros)
+~~~~~~~~~
+data (static variables)
+~~~~~~~~~
+text segment (executable binaries)
+~~~~~~~~~
+Lower adresses (0x00000000)

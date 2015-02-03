@@ -6,6 +6,7 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
     int words = 0; 
     int bytes = 0;
     char c;
+    int nul_byte_seen = 0;
     char lastline = ' ';
     while(c = fgetc(infile), c != EOF){
 	bytes += 1;
@@ -14,6 +15,12 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	}
 	if(isspace(c) && !isspace(lastline)){
 	    words += 1;
+	}
+        if(c == '\0'){
+	    nul_byte_seen = 1;
+	}
+	if(words == 0 && bytes > 0 && nul_byte_seen == 1){
+	     words = 1;
 	}
 
 	lastline = c;
