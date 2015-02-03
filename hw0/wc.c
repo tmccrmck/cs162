@@ -20,7 +20,7 @@ void wc(FILE *ofile, FILE *infile, char *inname) {
 	    nul_byte_seen = 1;
 	}
 	if(words == 0 && bytes > 0 && nul_byte_seen == 1){
-	     lines += 1;
+	     words = 1;
 	}
 
 	lastline = c;
