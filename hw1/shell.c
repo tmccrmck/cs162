@@ -23,6 +23,19 @@ int cmd_quit(tok_t arg[]) {
   return 1;
 }
 
+int cmd_cd(tok_t arg[]){
+  if(arg[0] == NULL){
+    arg[0] = "/home";
+  }
+  int i = chdir(arg[0]);
+  if(i == -1){
+    return -1;
+  }
+
+  printf("\n");
+  return 1;
+}
+
 int cmd_help(tok_t arg[]);
 
 
@@ -37,6 +50,7 @@ typedef struct fun_desc {
 fun_desc_t cmd_table[] = {
   {cmd_help, "?", "show this help menu"},
   {cmd_quit, "quit", "quit the command shell"},
+  {cmd_cd, "cd", "change current directory"},
 };
 
 int cmd_help(tok_t arg[]) {
@@ -112,12 +126,17 @@ int shell (int argc, char *argv[]) {
   pid_t ppid = getppid();	/* get parents PID */
   pid_t cpid, tcpid, cpgid;
 
+  /* MY CODE */
+  char *cwd = malloc(INPUT_STRING_SIZE+1);
+  size_t size = INPUT_STRING_SIZE+1;
+  cwd = getcwd(cwd, size);
+
   init_shell();
 
   printf("%s running as PID %d under %d\n",argv[0],pid,ppid);
 
   lineNum=0;
-  fprintf(stdout, "%d: ", lineNum);
+  fprintf(stdout, "%d %s: ", lineNum, cwd);
   while ((s = freadln(stdin))){
     t = getToks(s); /* break the line into tokens */
     fundex = lookup(t[0]); /* Is first token a shell literal */
@@ -125,7 +144,8 @@ int shell (int argc, char *argv[]) {
     else {
       fprintf(stdout, "This shell only supports built-ins. Replace this to run programs as commands.\n");
     }
-    fprintf(stdout, "%d: ", lineNum);
+    cwd = getcwd(cwd, size);
+    fprintf(stdout, "%d %s: ", lineNum, cwd);
   }
   return 0;
 }
