@@ -25,7 +25,7 @@ int cmd_quit(tok_t arg[]) {
 
 int cmd_cd(tok_t arg[]){
   if(arg[0] == NULL || strcmp(arg[0], "~") == 0){
-    arg[0] = "/home/";
+    arg[0] = "/home";
   }
   int i = chdir(arg[0]);
   if(i == -1){
