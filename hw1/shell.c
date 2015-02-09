@@ -37,7 +37,6 @@ int cmd_cd(tok_t arg[]){
 
 int cmd_help(tok_t arg[]);
 
-
 /* Command Lookup table */
 typedef int cmd_fun_t (tok_t args[]); /* cmd functions take token array and return int */
 typedef struct fun_desc {
@@ -55,7 +54,7 @@ fun_desc_t cmd_table[] = {
 int cmd_help(tok_t arg[]) {
   int i;
   for (i=0; i < (sizeof(cmd_table)/sizeof(fun_desc_t)); i++) {
-    printf("%s - %s\n",cmd_table[i].cmd, cmd_table[i].doc);
+    printf("%s - %s\n", cmd_table[i].cmd, cmd_table[i].doc);
   }
   return 1;
 }
@@ -114,16 +113,16 @@ process* create_process(char* inputString)
   return NULL;
 }
 
-
-
 int shell (int argc, char *argv[]) {
   char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
   tok_t *t;			/* tokens parsed from input */
-  int lineNum = 0;
+  int lineNum = 1;
   int fundex = -1;
   pid_t pid = getpid();		/* get current processes PID */
   pid_t ppid = getppid();	/* get parents PID */
   pid_t cpid, tcpid, cpgid;
+  int rtn;
+  int status;
 
   /* MY CODE */
   char *cwd = malloc(INPUT_STRING_SIZE+1);
@@ -139,12 +138,27 @@ int shell (int argc, char *argv[]) {
   while ((s = freadln(stdin))){
     t = getToks(s); /* break the line into tokens */
     fundex = lookup(t[0]); /* Is first token a shell literal */
-    if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
-    else {
-      fprintf(stdout, "This shell only supports built-ins. Replace this to run programs as commands.\n");
+
+    if(fundex >= 0){ 
+      cmd_table[fundex].fun(&t[1]);
+    } 
+    else{ 
+      cpid = fork(); 
+      if(cpid == 0){
+        rtn = execv(t[0], t);
+          if (rtn == -1){
+	    lineNum += 1;
+	    printf("only support built ins\n");
+            exit(-1);
+          }
+      }  
+      else {
+        wait(&status);
+      }
     }
     cwd = getcwd(cwd, size);
     fprintf(stdout, "%d %s: ", lineNum, cwd);
+    lineNum += 1;
   }
   return 0;
 }
