@@ -116,7 +116,7 @@ process* create_process(char* inputString)
 int shell (int argc, char *argv[]) {
   char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
   tok_t *t;			/* tokens parsed from input */
-  int lineNum = 1;
+  int lineNum = 0;
   int fundex = -1;
   pid_t pid = getpid();		/* get current processes PID */
   pid_t ppid = getppid();	/* get parents PID */
