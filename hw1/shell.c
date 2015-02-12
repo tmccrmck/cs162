@@ -144,12 +144,17 @@ int shell (int argc, char *argv[]) {
     } 
     else{ 
       cpid = fork(); 
+
+      if(cpid == -1){ 
+        perror("fork failure");
+        exit(1);
+      }
       if(cpid == 0){
         rtn = execv(t[0], t);
           if (rtn == -1){
 	    lineNum += 1;
 	    printf("only support built ins\n");
-            exit(-1);
+            exit(0);
           }
       }  
       else {
