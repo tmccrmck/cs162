@@ -181,6 +181,7 @@ int shell (int argc, char *argv[]) {
         rtn = execv(t[0], t);
         if(rtn == -1){
           printf("only support built ins \n");
+          exit(0);
         }
       }  
       else {
