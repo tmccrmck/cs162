@@ -162,27 +162,32 @@ int shell (int argc, char *argv[]) {
         perror("fork failure");
         exit(1);
       }
-      if(cpid == 0){
-        paths = getenv("PATH");
-        paths_t = getToks(paths); 
-        for(i = 0; i < 9; i++){
-          full_path = concat(paths_t[i], "/");
-          full_path = concat(full_path, t[0]);
-          access_check = access(full_path, F_OK);
+      else if(cpid == 0){
+	rtn = execv(t[0], t);
 
-          if(access_check == 0){
-            rtn = execv(full_path, t);
-            if(rtn == -1){
-              printf("only support proper built ins \n");
-              exit(0);  
-            }
+        if(rtn == -1){
+          paths = getenv("PATH");
+          paths_t = getToks(paths); 
+          for(i = 0; i < 9; i++){
+            full_path = concat(paths_t[i], "/");
+            full_path = concat(full_path, t[0]);
+            access_check = access(full_path, F_OK);
+
+            if(access_check == 0){
+              rtn = execv(full_path, t);
+              if(rtn == -1){
+                printf("only support proper built ins \n");
+                exit(0);  
+              }
+            }	
           }
-	}  
+        }  
+        exit(0);
+/*
         rtn = execv(t[0], t);
         if(rtn == -1){
-          printf("only support built ins \n");
           exit(0);
-        }
+        }  */
       }  
       else {
         wait(&status);
