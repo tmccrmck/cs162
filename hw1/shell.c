@@ -25,7 +25,7 @@ int cmd_quit(tok_t arg[]) {
 
 int cmd_cd(tok_t arg[]){
   if(arg[0] == NULL || strcmp(arg[0], "~") == 0){
-    arg[0] = "/home";
+    arg[0] = "/home/";
   }
   int i = chdir(arg[0]);
   if(i == -1){
@@ -113,6 +113,14 @@ process* create_process(char* inputString)
   return NULL;
 }
 
+char* concat(char *s1, char *s2)
+{
+    char *result = malloc(strlen(s1)+strlen(s2)+1);
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
 int shell (int argc, char *argv[]) {
   char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
   tok_t *t;			/* tokens parsed from input */
@@ -121,9 +129,14 @@ int shell (int argc, char *argv[]) {
   pid_t pid = getpid();		/* get current processes PID */
   pid_t ppid = getppid();	/* get parents PID */
   pid_t cpid, tcpid, cpgid;
+
+  tok_t *paths_t;
   int rtn;
   int status;
-
+  char *paths;
+  char *full_path;
+  int i;
+  int access_check;
   /* MY CODE */
   char *cwd = malloc(INPUT_STRING_SIZE+1);
   size_t size = INPUT_STRING_SIZE+1;
@@ -150,20 +163,33 @@ int shell (int argc, char *argv[]) {
         exit(1);
       }
       if(cpid == 0){
-        rtn = execv(t[0], t);
-          if (rtn == -1){
-	    lineNum += 1;
-	    printf("only support built ins\n");
-            exit(0);
+        paths = getenv("PATH");
+        paths_t = getToks(paths); 
+        for(i = 0; i < 9; i++){
+          full_path = concat(paths_t[i], "/");
+          full_path = concat(full_path, t[0]);
+          access_check = access(full_path, F_OK);
+
+          if(access_check == 0){
+            rtn = execv(full_path, t);
+            if(rtn == -1){
+              printf("only support proper built ins \n");
+              exit(0);  
+            }
           }
+	}  
+        rtn = execv(t[0], t);
+        if(rtn == -1){
+          printf("only support built ins \n");
+        }
       }  
       else {
         wait(&status);
       }
     }
     cwd = getcwd(cwd, size);
-    fprintf(stdout, "%d %s: ", lineNum, cwd);
     lineNum += 1;
+    fprintf(stdout, "%d %s: ", lineNum, cwd);
   }
   return 0;
 }
