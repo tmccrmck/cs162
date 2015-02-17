@@ -177,7 +177,6 @@ int shell (int argc, char *argv[]) {
         inname[strlen(inname) - 1] = '\0';
       }
     }
-    printf("%d\n", strlen(inname));
 
     t = getToks(s); /* break the line into tokens */
     fundex = lookup(t[0]); /* Is first token a shell literal */
