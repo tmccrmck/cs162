@@ -7,6 +7,7 @@
 #include <termios.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
 #define FALSE 0
 #define TRUE 1
@@ -113,8 +114,7 @@ process* create_process(char* inputString)
   return NULL;
 }
 
-char* concat(char *s1, char *s2)
-{
+char* concat(char *s1, char *s2){
     char *result = malloc(strlen(s1)+strlen(s2)+1);
     strcpy(result, s1);
     strcat(result, s2);
@@ -122,7 +122,7 @@ char* concat(char *s1, char *s2)
 }
 
 int shell (int argc, char *argv[]) {
-  char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
+  char *s = malloc(INPUT_STRING_SIZE+1);	/* user input string */
   tok_t *t;			/* tokens parsed from input */
   int lineNum = 0;
   int fundex = -1;
@@ -131,13 +131,12 @@ int shell (int argc, char *argv[]) {
   pid_t cpid, tcpid, cpgid;
 
   tok_t *paths_t;
-  int rtn;
-  int status;
+  int rtn, fd, in, saved_stdout,saved_stdin, i, access_check, status;
   char *paths;
   char *full_path;
-  int i;
-  int access_check;
-  /* MY CODE */
+  int out_flag, in_flag = 0;
+  char *inname;
+  char *outname;
   char *cwd = malloc(INPUT_STRING_SIZE+1);
   size_t size = INPUT_STRING_SIZE+1;
   cwd = getcwd(cwd, size);
@@ -149,15 +148,48 @@ int shell (int argc, char *argv[]) {
   lineNum=0;
   fprintf(stdout, "%d %s: ", lineNum, cwd);
   while ((s = freadln(stdin))){
+    inname = strstr(s, "<");
+    outname = strstr(s, ">"); 
+    if(inname){ 
+      in_flag = 1;
+      inname[0] = '\0';
+      inname++;
+      inname[strlen(inname) - 1] = '\0';
+    }
+    if(outname){ 
+      out_flag = 1;
+      outname[0] = '\0';
+      outname++;
+      outname[strlen(outname) - 1] = '\0';
+    }
+
     t = getToks(s); /* break the line into tokens */
     fundex = lookup(t[0]); /* Is first token a shell literal */
+
+    mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+    if(out_flag == 1){
+      fd = open(outname, O_WRONLY | O_CREAT | O_TRUNC, mode);    
+      saved_stdout = dup(1);
+    }
+    if(in_flag == 1){
+      in = open(inname, O_RDONLY);
+      saved_stdin = dup(0);
+    }
 
     if(fundex >= 0){ 
       cmd_table[fundex].fun(&t[1]);
     } 
     else{ 
       cpid = fork(); 
-
+      
+      if(out_flag == 1){
+        dup2(fd, 1);
+        close(fd);
+      }
+      if(in_flag == 1){
+        dup2(in, 0);
+        close(in);
+      }
       if(cpid == -1){ 
         perror("fork failure");
         exit(1);
@@ -183,15 +215,19 @@ int shell (int argc, char *argv[]) {
           }
         }  
         exit(0);
-/*
-        rtn = execv(t[0], t);
-        if(rtn == -1){
-          exit(0);
-        }  */
       }  
-      else {
-        wait(&status);
-      }
+      
+    else {
+      wait(&status);
+    }
+  }
+    if(out_flag == 1){
+      dup2(saved_stdout, 1);
+      close(saved_stdout);
+    }
+    if(in_flag == 1){
+      dup2(saved_stdin, 0);
+      close(saved_stdin);
     }
     cwd = getcwd(cwd, size);
     lineNum += 1;

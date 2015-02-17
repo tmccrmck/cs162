@@ -13,6 +13,8 @@ char *freadln(FILE *ifile) {
   char line[MAXLINE];		/* allocate line buffer on the stack */
   char *r = NULL;		/* ptr to return string object */
   int len;
+  fflush(stdin);
+  fflush(stdout);
   char *s = fgets((char *)line, MAXLINE, ifile);
   if (!s) return s;
   len = strlen(s)+1;
