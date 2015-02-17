@@ -140,6 +140,7 @@ int shell (int argc, char *argv[]) {
   char *cwd = malloc(INPUT_STRING_SIZE+1);
   size_t size = INPUT_STRING_SIZE+1;
   cwd = getcwd(cwd, size);
+  int flag1 = 0;
 
   init_shell();
 
@@ -155,22 +156,28 @@ int shell (int argc, char *argv[]) {
       inname[0] = '\0';
       inname++;
       if(inname[0] == ' '){
-        inname[0] = '\0';
         inname++;
+        flag1 = 1;
       }       
-      
+      inname[strlen(inname) - 1] = '\0';
     }
     if(outname){ 
       out_flag = 1;
       outname[0] = '\0';
       outname++;
       if(outname[0] == ' '){
-        outname[0] = '\0';
         outname++;
       }
-      if(in_flag == 0)
+      if(in_flag == 0){
         outname[strlen(outname)-1] = '\0';
+      }
     }
+    if(inname){
+      if(out_flag == 1 && flag1 == 1){
+        inname[strlen(inname) - 1] = '\0';
+      }
+    }
+    printf("%d\n", strlen(inname));
 
     t = getToks(s); /* break the line into tokens */
     fundex = lookup(t[0]); /* Is first token a shell literal */
