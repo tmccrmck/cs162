@@ -154,13 +154,22 @@ int shell (int argc, char *argv[]) {
       in_flag = 1;
       inname[0] = '\0';
       inname++;
-      inname[strlen(inname) - 1] = '\0';
+      if(inname[0] == ' '){
+        inname[0] = '\0';
+        inname++;
+      }       
+      
     }
     if(outname){ 
       out_flag = 1;
       outname[0] = '\0';
       outname++;
-      outname[strlen(outname) - 1] = '\0';
+      if(outname[0] == ' '){
+        outname[0] = '\0';
+        outname++;
+      }
+      if(in_flag == 0)
+        outname[strlen(outname)-1] = '\0';
     }
 
     t = getToks(s); /* break the line into tokens */
