@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 /* Your final implementation should comment out this macro. */
-/*#define MM_USE_STUBS*/
+#define MM_USE_STUBS
 
 void* mm_malloc(size_t size)
 {
