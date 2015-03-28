@@ -10,12 +10,13 @@
 #include <stdlib.h>
 
 /* Your final implementation should comment out this macro. */
-#define MM_USE_STUBS
+/*#define MM_USE_STUBS*/
 
 void* mm_malloc(size_t size)
 {
 #ifdef MM_USE_STUBS
-    return calloc(1, size);
+	int i = 0;  
+  return calloc(1, size);
 #else
 #error Not implemented.
 #endif
