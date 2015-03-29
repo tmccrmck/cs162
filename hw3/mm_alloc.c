@@ -10,7 +10,7 @@
 #include <unistd.h>
 /* Your final implementation should comment out this macro. */
 /* #define MM_USE_STUBS */
-int align4(size_t *x){ 
+size_t align4(size_t *x){ 
   return (((((*x)-1)>>2)<<2)+4);
 }
 void *base = NULL;
