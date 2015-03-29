@@ -6,12 +6,13 @@
  */
 
 #include "mm_alloc.h"
-
 #include <stdlib.h>
 
 /* Your final implementation should comment out this macro. */
 /* #define MM_USE_STUBS */
-#define align4(x) (((((x)-1)>>2)<<2)+4)
+int align4(x){ 
+  return (((((x)-1)>>2)<<2)+4);
+}
 void *base = NULL;
 
 s_block_ptr find_block(s_block_ptr *last, size_t size){
