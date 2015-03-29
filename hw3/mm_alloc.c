@@ -122,7 +122,39 @@ void* mm_realloc(void* ptr, size_t size)
 #else
 #error Not implemented.
 #endif*/
-		return 0;
+		size_t s;
+		s_block_ptr b, new;
+    void *newp;
+		if(!ptr)
+			return mm_malloc(size);
+		if(valid_addr(ptr)){
+      s = align4(size);
+			b = get_block(ptr);
+			if(b->size >= s){
+        if (b->size - s >= ( BLOCK_SIZE + 4))
+					split_block (b,s);
+			} 
+			else
+			{
+        if (b->next && b->next->free && (b->size + BLOCK_SIZE + b->next ->size) >= s){
+         fusion(b);
+				 if (b->size - s >= (BLOCK_SIZE + 4))
+					 split_block (b,s);
+			  } 
+				else {
+          newp = mm_malloc(size);
+				  if (!newp){
+					  return NULL;
+					}
+				  new = get_block(newp);
+				  copy_block(b,new);
+				  mm_free(ptr);
+				  return newp;
+			  }
+			}
+		  return ptr;
+		}
+  return NULL;
 }
 
 void mm_free(void* ptr)
