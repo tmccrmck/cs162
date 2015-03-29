@@ -21,7 +21,7 @@ s_block_ptr find_block(s_block_ptr *last, size_t size){
     *last = next;
 		next = next->next;
 	}
-	return b;
+	return next;
 }
 void split_block (s_block_ptr b, size_t s){
   s_block_ptr new;
