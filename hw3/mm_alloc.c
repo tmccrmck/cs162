@@ -7,11 +7,11 @@
 
 #include "mm_alloc.h"
 #include <stdlib.h>
-
+#include <unistd.h>
 /* Your final implementation should comment out this macro. */
 /* #define MM_USE_STUBS */
-int align4(x){ 
-  return (((((x)-1)>>2)<<2)+4);
+int align4(size_t *x){ 
+  return (((((*x)-1)>>2)<<2)+4);
 }
 void *base = NULL;
 
@@ -61,6 +61,7 @@ s_block_ptr fusion(s_block_ptr b){
 		if (b->next)
 			b->next->prev = b;
   }
+	return b;
 }
 
 s_block_ptr get_block(void *p){
@@ -94,7 +95,7 @@ void* mm_malloc(size_t size)
 #error Not implemented.
 #endif */
 	s_block_ptr b, last;
-	size_t s = align4(size);
+	size_t s = align4(&size);
 	if(base){
     last = base;
 		b = find_block(&last, s);
@@ -129,7 +130,7 @@ void* mm_realloc(void* ptr, size_t size)
 		if(!ptr)
 			return mm_malloc(size);
 		if(valid_addr(ptr)){
-      s = align4(size);
+      s = align4(&size);
 			b = get_block(ptr);
 			if(b->size >= s){
         if (b->size - s >= ( BLOCK_SIZE + 4))
