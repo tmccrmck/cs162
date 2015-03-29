@@ -16,10 +16,10 @@ size_t align4(size_t *x){
 void *base = NULL;
 
 s_block_ptr find_block(s_block_ptr *last, size_t size){
-  s_block_ptr b = base;
-	while (b && !(b->free && b->size >= size)){
-    *last = b;
-		b = b->next;
+  s_block_ptr next = base;
+	while (next != NULL && !(next->free && next->size >= size)){
+    *last = next;
+		next = next->next;
 	}
 	return b;
 }
