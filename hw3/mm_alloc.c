@@ -87,12 +87,11 @@ void copy_block(s_block_ptr src, s_block_ptr dst){
 
 void* mm_malloc(size_t size)
 {
-#ifdef MM_USE_STUBS
-	int i = 0;  
+/*#ifdef MM_USE_STUBS
   return calloc(1, size);
 #else
 #error Not implemented.
-#endif
+#endif */
 	s_block_ptr b, last;
 	size_t s = align4(size);
 	if(base){
@@ -118,21 +117,21 @@ void* mm_malloc(size_t size)
 
 void* mm_realloc(void* ptr, size_t size)
 {
-#ifdef MM_USE_STUBS
+/*#ifdef MM_USE_STUBS
     return realloc(ptr, size);
 #else
 #error Not implemented.
-#endif
+#endif*/
 		return 0;
 }
 
 void mm_free(void* ptr)
 {
-#ifdef MM_USE_STUBS
+/*#ifdef MM_USE_STUBS
     free(ptr);
 #else
 #error Not implemented.
-#endif
+#endif*/
   s_block_ptr b;
   if(valid_addr(ptr)){
     b = get_block(ptr);
