@@ -27,8 +27,8 @@ void split_block (s_block_ptr b, size_t s){
   new->free = 1;
 	new->ptr = new->data;
 	b->size = s;
-	if(new->next)
-		new->next->prev = new;
+	/*if(new->next)
+		new->next->prev = new;*/
 }
 
 s_block_ptr extend_heap (s_block_ptr last, size_t s){
@@ -42,8 +42,6 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 	block->next = NULL;
 	block->prev = last;
 	block->ptr = block->data;
-/*	if(last)
-		last->next = block; */
 	block->free = 0;
 	return block;
 }
