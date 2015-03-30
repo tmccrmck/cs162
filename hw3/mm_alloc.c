@@ -41,14 +41,14 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 	return block;
 }
 
-s_block_ptr fusion(s_block_ptr b){
-  if(b->next && b->next->free){
-    b->size += BLOCK_SIZE + b->next->size;
-		b->next = b->next->next;
-		if (b->next)
-			b->next->prev = b;
+s_block_ptr fusion(s_block_ptr block){
+  if(/*block->next != NULL && */block->next->free){
+    block->size += BLOCK_SIZE + block->next->size;
+		block->next = block->next->next;
+		if (block->next)
+			block->next->prev = block;
   }
-	return b;
+	return block;
 }
 
 s_block_ptr get_block(void *p){
@@ -76,8 +76,6 @@ void* mm_malloc(size_t size)
 #error Not implemented.
 #endif */
 	s_block_ptr block, last;
-	//size_t s = align4(&size);
-	//size_t s = size;
 	if(base != NULL){
     last = base;
 
@@ -89,7 +87,7 @@ void* mm_malloc(size_t size)
 		}
      
 		if(block != NULL){
-      if ((block->size - size) >= ( BLOCK_SIZE + 4))
+      if ((block->size - size) >= (BLOCK_SIZE + 4))
 				split_block(block,size);
 			block->free = 0;
 		} else{
@@ -119,8 +117,6 @@ void* mm_realloc(void* ptr, size_t size)
 		if(!ptr)
 			return mm_malloc(size);
 		if(valid_addr(ptr)){
-      //s = align4(&size);
-		  //s = size;
 			b = get_block(ptr);
 			if(b->size >= size){
         if (b->size - size >= ( BLOCK_SIZE + 4))
