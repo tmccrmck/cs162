@@ -79,7 +79,8 @@ void* mm_malloc(size_t size)
 #error Not implemented.
 #endif */
 	s_block_ptr block, last;
-	size_t s = align4(&size);
+	//size_t s = align4(&size);
+	size_t s = size;
 	if(base != NULL){
     last = base;
 
