@@ -14,6 +14,8 @@
 size_t align4(size_t *x){ 
   return (((((*x)-1)>>2)<<2)+4);
 }
+
+/*base of heap*/
 void *base = NULL;
 
 void split_block (s_block_ptr b, size_t s){
@@ -24,27 +26,26 @@ void split_block (s_block_ptr b, size_t s){
 	new->prev = b;
   new->free = 1;
 	new->ptr = new->data;
-
 	b->size = s;
 	if(new->next)
 		new->next->prev = new;
 }
 
 s_block_ptr extend_heap (s_block_ptr last, size_t s){
-  s_block_ptr b;
-	int sb;
-	b = sbrk(0);
-	sb = (int) sbrk(BLOCK_SIZE + s);
-	if (sb < 0)
+  s_block_ptr block;
+	int newEnd;
+	block = sbrk(0);
+	newEnd = (int) sbrk(BLOCK_SIZE + s);
+	if (newEnd < 0)
 		return NULL;
-	b->size = s;
-	b->next = NULL;
-	b->prev = last;
-	b->ptr = b->data;
-	if(last)
-		last->next = b;
-	b->free = 0;
-	return b;
+	block->size = s;
+	block->next = NULL;
+	block->prev = last;
+	block->ptr = block->data;
+/*	if(last)
+		last->next = block; */
+	block->free = 0;
+	return block;
 }
 
 s_block_ptr fusion(s_block_ptr b){
@@ -92,6 +93,7 @@ void* mm_malloc(size_t size)
 	size_t s = align4(&size);
 	if(base != NULL){
     last = base;
+
 		/*SEARCH NEXT BLOCK*/
     block = base;
 		while (block != NULL && !(block->free && block->size >= s)){
@@ -168,21 +170,21 @@ void mm_free(void* ptr)
 #else
 #error Not implemented.
 #endif*/
-  s_block_ptr b;
+  s_block_ptr block;
   if(valid_addr(ptr)){
-    b = get_block(ptr);
-		b->free = 1;
-    if (b->prev && b->prev ->free)
-			b = fusion(b->prev);
+    block = get_block(ptr);
+		block->free = 1;
+    if (block->prev && block->prev->free)
+			block = fusion(block->prev);
 
-    if (b->next)
-			fusion(b);
+    if (block->next)
+			fusion(block);
 		else{
-      if(b->prev)
-				b->prev->next = NULL;
+      if(block->prev)
+				block->prev->next = NULL;
 			else
 				base = NULL;
-			brk(b);
+			brk(block);
 		}
 	}
 }
