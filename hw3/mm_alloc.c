@@ -98,11 +98,11 @@ void* mm_malloc(size_t size)
 #endif */
 	s_block_ptr b, last;
 	size_t s = align4(&size);
-	if(base){
+	if(base != NULL){
     last = base;
 		b = find_block(&last, s);
      
-		if(b){
+		if(b != NULL){
       if ((b->size - s) >= ( BLOCK_SIZE + 4))
 				split_block(b,s);
 			b->free = 0;
@@ -153,7 +153,7 @@ void* mm_realloc(void* ptr, size_t size)
 					}
 				  new = get_block(newp);
 				  //copy_block(b,new);
-					memcpy(b, new, sizeof(struct s_block));
+					memcpy(b, new, sizeof(struct s_block*));
 				  mm_free(ptr);
 				  return newp;
 			  }
