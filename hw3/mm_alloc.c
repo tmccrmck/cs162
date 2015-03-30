@@ -67,13 +67,14 @@ s_block_ptr fusion(s_block_ptr b){
 s_block_ptr get_block(void *p){
   char *tmp;
 	tmp = p;
-	return (p = tmp -= BLOCK_SIZE);
+	tmp -= BLOCK_SIZE;
+	return (p = tmp);
 }
 
 int valid_addr(void *p){
-  if(base){
+  if(base != NULL){
 		if(p > base && p < sbrk(0)){
-			return (p == ( get_block (p))->ptr);
+			return p == (get_block (p))->ptr;
 		}
 	}
 	return 0;
