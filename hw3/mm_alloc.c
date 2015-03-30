@@ -70,14 +70,6 @@ int valid_addr(void *p){
 	}
 	return 0;
 }
-void copy_block(s_block_ptr src, s_block_ptr dst){
-  int *sdata, *ddata;
-	size_t i;
-	sdata = src->ptr;
-	ddata = dst->ptr;
-	for (i=0; i*4<src ->size && i*4<dst ->size; i++)
-		ddata[i] = sdata[i];
-}
 
 void* mm_malloc(size_t size)
 {
@@ -149,12 +141,12 @@ void* mm_realloc(void* ptr, size_t size)
 					  return NULL;
 					}
 				  new = get_block(newp);
-				  //copy_block(b,new);
-					int *sdata, *ddata;
-					sdata = b->ptr;
-					ddata = new->ptr;
+
+					/*COPYING DATA*/
+					int *bcopy = b->ptr;
+					int *newcopy = new->ptr;
 				  for (i=0; i*4< b->size && i*4 < new->size; i++){
-						ddata[i] = sdata[i];
+						newcopy[i] = bcopy[i];
 					}
 					//memcpy(b, new, sizeof(struct s_block*));
 				  mm_free(ptr);
