@@ -8,6 +8,7 @@
 #include "mm_alloc.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 /* Your final implementation should comment out this macro. */
 /* #define MM_USE_STUBS */
 size_t align4(size_t *x){ 
@@ -100,6 +101,7 @@ void* mm_malloc(size_t size)
 	if(base){
     last = base;
 		b = find_block(&last, s);
+     
 		if(b){
       if ((b->size - s) >= ( BLOCK_SIZE + 4))
 				split_block(b,s);
@@ -150,7 +152,8 @@ void* mm_realloc(void* ptr, size_t size)
 					  return NULL;
 					}
 				  new = get_block(newp);
-				  copy_block(b,new);
+				  //copy_block(b,new);
+					memcpy(b, new, sizeof(struct s_block));
 				  mm_free(ptr);
 				  return newp;
 			  }
