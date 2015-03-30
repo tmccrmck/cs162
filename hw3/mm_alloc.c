@@ -123,7 +123,8 @@ void* mm_realloc(void* ptr, size_t size)
 		if(!ptr)
 			return mm_malloc(size);
 		if(valid_addr(ptr)){
-      s = align4(&size);
+      //s = align4(&size);
+			s = size;
 			b = get_block(ptr);
 			if(b->size >= s){
         if (b->size - s >= ( BLOCK_SIZE + 4))
