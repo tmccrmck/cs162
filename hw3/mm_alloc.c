@@ -11,9 +11,6 @@
 #include <string.h>
 /* Your final implementation should comment out this macro. */
 /* #define MM_USE_STUBS */
-size_t align4(size_t *x){ 
-  return (((((*x)-1)>>2)<<2)+4);
-}
 
 /*base of heap*/
 void *base = NULL;
@@ -80,29 +77,28 @@ void* mm_malloc(size_t size)
 #endif */
 	s_block_ptr block, last;
 	//size_t s = align4(&size);
-	size_t s = size;
+	//size_t s = size;
 	if(base != NULL){
     last = base;
 
 		/*SEARCH NEXT BLOCK*/
     block = base;
-		while (block != NULL && !(block->free && block->size >= s)){
+		while (block != NULL && !(block->free && block->size >= size)){
 			 last = block;
 			 block = block->next;
 		}
-		//block = next;
      
 		if(block != NULL){
-      if ((block->size - s) >= ( BLOCK_SIZE + 4))
-				split_block(block,s);
+      if ((block->size - size) >= ( BLOCK_SIZE + 4))
+				split_block(block,size);
 			block->free = 0;
 		} else{
-      block = extend_heap(last,s);
+      block = extend_heap(last,size);
 			if (!block)
 				return NULL;
 		}
 	} else{
-    block = extend_heap(NULL, s);
+    block = extend_heap(NULL, size);
 		if(!block)
 			return NULL;
 		base = block;
@@ -117,25 +113,25 @@ void* mm_realloc(void* ptr, size_t size)
 #else
 #error Not implemented.
 #endif*/
-		size_t s, i;
+		size_t i;
 		s_block_ptr b, new;
     void *newp;
 		if(!ptr)
 			return mm_malloc(size);
 		if(valid_addr(ptr)){
       //s = align4(&size);
-			s = size;
+		  //s = size;
 			b = get_block(ptr);
-			if(b->size >= s){
-        if (b->size - s >= ( BLOCK_SIZE + 4))
-					split_block (b,s);
+			if(b->size >= size){
+        if (b->size - size >= ( BLOCK_SIZE + 4))
+					split_block (b,size);
 			} 
 			else
 			{
-        if (b->next && b->next->free && (b->size + BLOCK_SIZE + b->next ->size) >= s){
+        if (b->next && b->next->free && (b->size + BLOCK_SIZE + b->next->size) >= size){
          fusion(b);
-				 if (b->size - s >= (BLOCK_SIZE + 4))
-					 split_block (b,s);
+				 if (b->size - size >= (BLOCK_SIZE + 4))
+					 split_block (b,size);
 			  } 
 				else {
           newp = mm_malloc(size);
