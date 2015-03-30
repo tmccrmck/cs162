@@ -96,11 +96,17 @@ void* mm_malloc(size_t size)
 #else
 #error Not implemented.
 #endif */
-	s_block_ptr b, last;
+	s_block_ptr b, last, next;
 	size_t s = align4(&size);
 	if(base != NULL){
     last = base;
-		b = find_block(&last, s);
+		//b = find_block(&last, s);
+    next = base;
+		while (next != NULL && !(next->free && next->size >= s)){
+			 last = next;
+			 next = next->next;
+		}
+		b = next;
      
 		if(b != NULL){
       if ((b->size - s) >= ( BLOCK_SIZE + 4))
@@ -152,8 +158,8 @@ void* mm_realloc(void* ptr, size_t size)
 					  return NULL;
 					}
 				  new = get_block(newp);
-				  //copy_block(b,new);
-					memcpy(b, new, sizeof(struct s_block*));
+				  copy_block(b,new);
+					//memcpy(b, new, sizeof(struct s_block*));
 				  mm_free(ptr);
 				  return newp;
 			  }
