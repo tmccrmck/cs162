@@ -18,17 +18,15 @@ size_t align4(size_t *x){
 /*base of heap*/
 void *base = NULL;
 
-void split_block (s_block_ptr b, size_t s){
+void split_block (s_block_ptr block, size_t s){
   s_block_ptr new;
-	new = (s_block_ptr)(b->data + s);
-	new->size = b->size - s - BLOCK_SIZE ;
-	new->next = b->next;
-	new->prev = b;
+	new = (s_block_ptr)(block->data + s);
+	new->size = block->size - s - BLOCK_SIZE ;
+	new->next = block->next;
+	new->prev = block;
   new->free = 1;
 	new->ptr = new->data;
-	b->size = s;
-	/*if(new->next)
-		new->next->prev = new;*/
+	block->size = s;
 }
 
 s_block_ptr extend_heap (s_block_ptr last, size_t s){
@@ -60,7 +58,8 @@ s_block_ptr get_block(void *p){
   char *tmp;
 	tmp = p;
 	tmp -= BLOCK_SIZE;
-	return (p = tmp);
+	p = tmp;
+	return p;
 }
 
 int valid_addr(void *p){
