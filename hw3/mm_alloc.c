@@ -16,14 +16,6 @@ size_t align4(size_t *x){
 }
 void *base = NULL;
 
-s_block_ptr find_block(s_block_ptr *last, size_t size){
-  s_block_ptr next = base;
-	while (next != NULL && !(next->free && next->size >= size)){
-    *last = next;
-		next = next->next;
-	}
-	return next;
-}
 void split_block (s_block_ptr b, size_t s){
   s_block_ptr new;
 	new = (s_block_ptr)(b->data + s);
@@ -96,34 +88,34 @@ void* mm_malloc(size_t size)
 #else
 #error Not implemented.
 #endif */
-	s_block_ptr b, last, next;
+	s_block_ptr block, last;
 	size_t s = align4(&size);
 	if(base != NULL){
     last = base;
-		//b = find_block(&last, s);
-    next = base;
-		while (next != NULL && !(next->free && next->size >= s)){
-			 last = next;
-			 next = next->next;
+		/*SEARCH NEXT BLOCK*/
+    block = base;
+		while (block != NULL && !(block->free && block->size >= s)){
+			 last = block;
+			 block = block->next;
 		}
-		b = next;
+		//block = next;
      
-		if(b != NULL){
-      if ((b->size - s) >= ( BLOCK_SIZE + 4))
-				split_block(b,s);
-			b->free = 0;
+		if(block != NULL){
+      if ((block->size - s) >= ( BLOCK_SIZE + 4))
+				split_block(block,s);
+			block->free = 0;
 		} else{
-      b = extend_heap(last,s);
-			if (!b)
+      block = extend_heap(last,s);
+			if (!block)
 				return NULL;
 		}
 	} else{
-    b = extend_heap(NULL, s);
-		if(!b)
+    block = extend_heap(NULL, s);
+		if(!block)
 			return NULL;
-		base = b;
+		base = block;
 	}
-	return b->data;
+	return block->data;
 }
 
 void* mm_realloc(void* ptr, size_t size)
