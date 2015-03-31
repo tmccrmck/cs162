@@ -49,14 +49,6 @@ s_block_ptr fusion(s_block_ptr block){
 	return block;
 }
 
-s_block_ptr get_block(void *p){
-  char *tmp;
-	tmp = p;
-	tmp -= BLOCK_SIZE;
-	p = tmp;
-	return p;
-}
-
 void* mm_malloc(size_t size)
 {
 /*#ifdef MM_USE_STUBS
@@ -152,16 +144,14 @@ void mm_free(void* ptr)
   if(ptr){
     block = ptr - BLOCK_SIZE;
 		block->free = 1;
-    /*if (block->prev && block->prev->free)
-			block = fusion(block->prev);*/
 
-    if (block->next)
+    if (block->next != NULL)
 			fusion(block);
 		else{
       if(block->prev)
 				block->prev->next = NULL;
-			else
-				base = NULL;
+			/*else
+				base = NULL;*/
 			brk(block);
 		}
 	}
