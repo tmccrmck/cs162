@@ -42,11 +42,11 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 }
 
 s_block_ptr fusion(s_block_ptr block){
-  if(/*block->next != NULL && */block->next->free){
+  if(block->next->free == 1){
     block->size += BLOCK_SIZE + block->next->size;
 		block->next = block->next->next;
-		if (block->next)
-			block->next->prev = block;
+		/*if (block->next)
+			block->next->prev = block;*/
   }
 	return block;
 }
