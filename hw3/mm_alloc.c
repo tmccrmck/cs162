@@ -152,8 +152,8 @@ void mm_free(void* ptr)
   if(ptr){
     block = ptr - BLOCK_SIZE;
 		block->free = 1;
-    if (block->prev && block->prev->free)
-			block = fusion(block->prev);
+    /*if (block->prev && block->prev->free)
+			block = fusion(block->prev);*/
 
     if (block->next)
 			fusion(block);
