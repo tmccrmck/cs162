@@ -104,7 +104,7 @@ void* mm_realloc(void* ptr, size_t size)
 				  mm_free(ptr);
 				  return newp;
 			}
-		  return ptr;
+		  //return ptr;
 		}
   return NULL;
 }
