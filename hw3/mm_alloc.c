@@ -107,7 +107,7 @@ void* mm_realloc(void* ptr, size_t size)
 			return mm_malloc(size);
 		if(ptr){
 			//b = get_block(ptr);
-			b = b - BLOCK_SIZE;
+			b = ptr - BLOCK_SIZE;
 			if(b->size >= size){
         if (b->size - size >= ( BLOCK_SIZE + 4))
 					split_block (b,size);
