@@ -114,7 +114,7 @@ void* mm_realloc(void* ptr, size_t size)
     void *newp;
 		if(!ptr)
 			return mm_malloc(size);
-		if(valid_addr(ptr)){
+		if(ptr){
 			b = get_block(ptr);
 			if(b->size >= size){
         if (b->size - size >= ( BLOCK_SIZE + 4))
