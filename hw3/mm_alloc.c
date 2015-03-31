@@ -147,13 +147,11 @@ void mm_free(void* ptr)
 
     if (block->next != NULL)
 			fusion(block);
-		else{
+		/*else{
       if(block->prev)
-				block->prev->next = NULL;
-			/*else
-				base = NULL;*/
+				block->prev->next = NULL;*/
 			brk(block);
-		}
+		//}
 	}
 }
 
