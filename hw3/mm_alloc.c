@@ -67,15 +67,9 @@ void* mm_malloc(size_t size)
 			 block = block->next;
 		}
      
-		/*if(block != NULL){
-      if ((block->size - size) >= (BLOCK_SIZE + 4))
-				split_block(block,size);
-			block->free = 0;
-		} else{ */
-      block = extend_heap(last,size);
-			if (!block)
-				return NULL;
-		//}
+    block = extend_heap(last,size);
+	  if (!block)
+			return NULL;
 	} else{
 		/* ON FIRST CALL */
     block = extend_heap(NULL, size);
@@ -100,12 +94,12 @@ void* mm_realloc(void* ptr, size_t size)
 			return mm_malloc(size);*/
 		if(ptr){
 			block = ptr - BLOCK_SIZE;
-			if(block->size >= size){
+			/*if(block->size >= size){
         if (block->size - size >= (BLOCK_SIZE + 4))
 					split_block (block,size);
 			} 
 			else
-			{
+			{*/
         if (block->next && block->next->free && (block->size + BLOCK_SIZE + block->next->size) >= size){
          fusion(block);
 				 if (block->size - size >= (BLOCK_SIZE + 4))
@@ -127,7 +121,7 @@ void* mm_realloc(void* ptr, size_t size)
 					//memcpy(b, new, sizeof(struct s_block*));
 				  mm_free(ptr);
 				  return newp;
-			  }
+			  //}
 			}
 		  return ptr;
 		}
