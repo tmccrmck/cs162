@@ -32,16 +32,16 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 	newEnd = (int) sbrk(BLOCK_SIZE + s);
 	if (newEnd < 0)
 		return NULL;
-	/*curBrk->size = s;
+	/curBrk->size = s;
 	curBrk->prev = last;
 	curBrk->ptr = curBrk->data;
-	curBrk->free = 0; */
+	curBrk->free = 0;
 	return curBrk;
 }
 
 s_block_ptr fusion(s_block_ptr block){
   if(block->next->free == 1){
-    block->size += BLOCK_SIZE + block->next->size;
+    block->size = block->size + BLOCK_SIZE + block->next->size;
 		block->next = block->next->next;
   }
 	return block;
