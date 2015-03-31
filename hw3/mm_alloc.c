@@ -30,8 +30,8 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
   s_block_ptr block;
 	block = sbrk(0);
 	newEnd = (int) sbrk(BLOCK_SIZE + s);
-//	if (newEnd < 0)
-//		return NULL;
+	if (newEnd < 0)
+		return NULL;
 	block->size = s;
 	block->prev = last;
 	block->ptr = block->data;
