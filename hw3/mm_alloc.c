@@ -118,7 +118,7 @@ void* mm_realloc(void* ptr, size_t size)
 				  //for (i=0; i*4< block->size && i*4 < new->size; i++){
 					//	newcopy[i] = bcopy[i];
 					//}
-					memcpy(block->data, new->data, new->size);
+					memcpy(new->data, block->data, block->size);
 				  mm_free(ptr);
 				  return newp;
 			  //}
