@@ -45,8 +45,6 @@ s_block_ptr fusion(s_block_ptr block){
   if(block->next->free == 1){
     block->size += BLOCK_SIZE + block->next->size;
 		block->next = block->next->next;
-		/*if (block->next)
-			block->next->prev = block;*/
   }
 	return block;
 }
@@ -160,7 +158,7 @@ void mm_free(void* ptr)
 #error Not implemented.
 #endif*/
   s_block_ptr block;
-  if(valid_addr(ptr)){
+  if(ptr){
     block = get_block(ptr);
 		block->free = 1;
     if (block->prev && block->prev->free)
