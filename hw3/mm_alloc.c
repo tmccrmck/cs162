@@ -34,7 +34,7 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 	if (newEnd < 0)
 		return NULL;
 	block->size = s;
-	block->next = NULL;
+	//block->next = NULL;
 	block->prev = last;
 	block->ptr = block->data;
 	block->free = 0;
@@ -62,7 +62,7 @@ void* mm_malloc(size_t size)
 
 		/*SEARCH NEXT BLOCK*/
     block = base;
-		while (block != NULL && !(block->free && block->size >= size)){
+		while (block != NULL && block->free == 0 && block->size <= size){
 			 last = block;
 			 block = block->next;
 		}
@@ -91,9 +91,9 @@ void* mm_realloc(void* ptr, size_t size)
     void *newp;
 		if(ptr){
 			block = ptr - BLOCK_SIZE;
-      if (block->next && block->next->free /*&& (block->size + BLOCK_SIZE + block->next->size) >= size*/){
+      if (block->next && block->next->free){
          fusion(block);
-			 } 
+			} 
 			else {
           newp = mm_malloc(size);
 				  if (!newp){
