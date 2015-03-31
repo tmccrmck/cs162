@@ -101,36 +101,34 @@ void* mm_realloc(void* ptr, size_t size)
 #error Not implemented.
 #endif*/
 		size_t i;
-		s_block_ptr b, new;
+		s_block_ptr block, new;
     void *newp;
-		if(!ptr)
-			return mm_malloc(size);
+		/*if(!ptr)
+			return mm_malloc(size);*/
 		if(ptr){
-			//b = get_block(ptr);
-			b = ptr - BLOCK_SIZE;
-			if(b->size >= size){
-        if (b->size - size >= ( BLOCK_SIZE + 4))
-					split_block (b,size);
+			block = ptr - BLOCK_SIZE;
+			if(block->size >= size){
+        if (block->size - size >= (BLOCK_SIZE + 4))
+					split_block (block,size);
 			} 
 			else
 			{
-        if (b->next && b->next->free && (b->size + BLOCK_SIZE + b->next->size) >= size){
-         fusion(b);
-				 if (b->size - size >= (BLOCK_SIZE + 4))
-					 split_block (b,size);
+        if (block->next && block->next->free && (block->size + BLOCK_SIZE + block->next->size) >= size){
+         fusion(block);
+				 if (block->size - size >= (BLOCK_SIZE + 4))
+					 split_block (block,size);
 			  } 
 				else {
           newp = mm_malloc(size);
 				  if (!newp){
 					  return NULL;
 					}
-				  //new = get_block(newp);
 					new = newp - BLOCK_SIZE;
 
 					/*COPYING DATA*/
-					int *bcopy = b->ptr;
+					int *bcopy = block->ptr;
 					int *newcopy = new->ptr;
-				  for (i=0; i*4< b->size && i*4 < new->size; i++){
+				  for (i=0; i*4< block->size && i*4 < new->size; i++){
 						newcopy[i] = bcopy[i];
 					}
 					//memcpy(b, new, sizeof(struct s_block*));
