@@ -16,8 +16,7 @@
 void *base = NULL;
 
 void split_block (s_block_ptr block, size_t s){
-  s_block_ptr new;
-	new = (s_block_ptr)(block->data + s);
+  s_block_ptr new = (s_block_ptr)(block->data + s);
 	new->size = block->size - s - BLOCK_SIZE ;
 	new->next = block->next;
 	new->prev = block;
@@ -27,18 +26,17 @@ void split_block (s_block_ptr block, size_t s){
 }
 
 s_block_ptr extend_heap (s_block_ptr last, size_t s){
-  s_block_ptr block;
+  s_block_ptr curBrk;
 	int newEnd;
-	block = sbrk(0);
+	curBrk = sbrk(0);
 	newEnd = (int) sbrk(BLOCK_SIZE + s);
 	if (newEnd < 0)
 		return NULL;
-	block->size = s;
-	//block->next = NULL;
-	block->prev = last;
-	block->ptr = block->data;
-	block->free = 0;
-	return block;
+	/*curBrk->size = s;
+	curBrk->prev = last;
+	curBrk->ptr = curBrk->data;
+	curBrk->free = 0; */
+	return curBrk;
 }
 
 s_block_ptr fusion(s_block_ptr block){
