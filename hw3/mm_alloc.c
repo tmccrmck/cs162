@@ -150,7 +150,7 @@ void mm_free(void* ptr)
 #endif*/
   s_block_ptr block;
   if(ptr){
-    block = get_block(ptr);
+    block = ptr - BLOCK_SIZE;
 		block->free = 1;
     if (block->prev && block->prev->free)
 			block = fusion(block->prev);
