@@ -57,15 +57,6 @@ s_block_ptr get_block(void *p){
 	return p;
 }
 
-int valid_addr(void *p){
-  if(base != NULL){
-		if(p > base && p < sbrk(0)){
-			return p == (get_block (p))->ptr;
-		}
-	}
-	return 0;
-}
-
 void* mm_malloc(size_t size)
 {
 /*#ifdef MM_USE_STUBS
@@ -115,7 +106,8 @@ void* mm_realloc(void* ptr, size_t size)
 		if(!ptr)
 			return mm_malloc(size);
 		if(ptr){
-			b = get_block(ptr);
+			//b = get_block(ptr);
+			b = b - BLOCK_SIZE;
 			if(b->size >= size){
         if (b->size - size >= ( BLOCK_SIZE + 4))
 					split_block (b,size);
@@ -132,7 +124,8 @@ void* mm_realloc(void* ptr, size_t size)
 				  if (!newp){
 					  return NULL;
 					}
-				  new = get_block(newp);
+				  //new = get_block(newp);
+					new = newp - BLOCK_SIZE;
 
 					/*COPYING DATA*/
 					int *bcopy = b->ptr;
