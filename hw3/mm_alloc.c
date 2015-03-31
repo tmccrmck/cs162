@@ -34,7 +34,6 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 	if (newEnd < 0)
 		return NULL;
 	block->size = s;
-	//block->next = NULL;
 	block->prev = last;
 	block->ptr = block->data;
 	block->free = 0;
@@ -42,10 +41,13 @@ s_block_ptr extend_heap (s_block_ptr last, size_t s){
 }
 
 s_block_ptr fusion(s_block_ptr block){
-  if(block->next->free == 1){
+  if(block->next->free == 1 && block->next != NULL){
     block->size = block->size + BLOCK_SIZE + block->next->size;
 		block->next = block->next->next;
-  }
+  }else if(block->prev->free == 1 && block->prev != NULL){
+    block->size = block->size + BLOCK_SIZE + block->prev->size;
+		block->prev = block->prev->prev; 
+	}
 	return block;
 }
 
