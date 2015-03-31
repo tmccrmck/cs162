@@ -67,15 +67,15 @@ void* mm_malloc(size_t size)
 			 block = block->next;
 		}
      
-		if(block != NULL){
-      /*if ((block->size - size) >= (BLOCK_SIZE + 4))
-				split_block(block,size);*/
+		/*if(block != NULL){
+      if ((block->size - size) >= (BLOCK_SIZE + 4))
+				split_block(block,size);
 			block->free = 0;
-		} else{
+		} else{ */
       block = extend_heap(last,size);
 			if (!block)
 				return NULL;
-		}
+		//}
 	} else{
 		/* ON FIRST CALL */
     block = extend_heap(NULL, size);
