@@ -113,12 +113,12 @@ void* mm_realloc(void* ptr, size_t size)
 					new = newp - BLOCK_SIZE;
 
 					/*COPYING DATA*/
-					int *bcopy = block->ptr;
-					int *newcopy = new->ptr;
-				  for (i=0; i*4< block->size && i*4 < new->size; i++){
-						newcopy[i] = bcopy[i];
-					}
-					//memcpy(b, new, sizeof(struct s_block*));
+					//int *bcopy = block->ptr;
+					//int *newcopy = new->ptr;
+				  //for (i=0; i*4< block->size && i*4 < new->size; i++){
+					//	newcopy[i] = bcopy[i];
+					//}
+					memcpy(block->data, new->data, new->size);
 				  mm_free(ptr);
 				  return newp;
 			  //}
