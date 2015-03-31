@@ -16,23 +16,22 @@
 void *base = NULL;
 
 void split_block (s_block_ptr block, size_t s){
-  s_block_ptr new;
-	new = (s_block_ptr)(block->data + s);
-	new->size = block->size - s - BLOCK_SIZE ;
-	new->next = block->next;
-	new->prev = block;
-  new->free = 1;
-	new->ptr = new->data;
+  s_block_ptr split = (s_block_ptr)(block->data + s);
 	block->size = s;
+	split->next = block->next;
+	split->prev = block;
+  split->free = 1;
+	split->ptr = split->data;
+	split->size = block->size - s - BLOCK_SIZE ;
 }
 
 s_block_ptr extend_heap (s_block_ptr last, size_t s){
-  s_block_ptr block;
 	int newEnd;
+  s_block_ptr block;
 	block = sbrk(0);
 	newEnd = (int) sbrk(BLOCK_SIZE + s);
-	if (newEnd < 0)
-		return NULL;
+//	if (newEnd < 0)
+//		return NULL;
 	block->size = s;
 	block->prev = last;
 	block->ptr = block->data;
@@ -44,7 +43,7 @@ s_block_ptr fusion(s_block_ptr block){
   if(block->next->free == 1 && block->next != NULL){
     block->size = block->size + BLOCK_SIZE + block->next->size;
 		block->next = block->next->next;
-  }else if(block->prev->free == 1 && block->prev != NULL){
+  } else if(block->prev->free == 1 && block->prev != NULL){
     block->size = block->size + BLOCK_SIZE + block->prev->size;
 		block->prev = block->prev->prev; 
 	}
@@ -90,25 +89,24 @@ void* mm_realloc(void* ptr, size_t size)
 #error Not implemented.
 #endif*/
 		s_block_ptr block, new;
-    void *newp;
-		if(ptr){
+    void *mlc;
+		if(ptr != NULL){
 			block = ptr - BLOCK_SIZE;
       if (block->next && block->next->free){
          fusion(block);
 			} 
 			else {
-          newp = mm_malloc(size);
-				  if (!newp){
+          mlc = mm_malloc(size);
+				  if (!mlc){
 					  return NULL;
 					}
-					new = newp - BLOCK_SIZE;
+					new = mlc - BLOCK_SIZE;
 
 					/*COPYING DATA*/
 					memcpy(new->data, block->data, block->size);
 				  mm_free(ptr);
-				  return newp;
+				  return mlc;
 			}
-		  //return ptr;
 		}
   return NULL;
 }
@@ -121,7 +119,7 @@ void mm_free(void* ptr)
 #error Not implemented.
 #endif*/
   s_block_ptr block;
-  if(ptr){
+  if(ptr != NULL){
     block = ptr - BLOCK_SIZE;
 		block->free = 1;
 
