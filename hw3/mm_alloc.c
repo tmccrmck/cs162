@@ -87,25 +87,16 @@ void* mm_realloc(void* ptr, size_t size)
 #else
 #error Not implemented.
 #endif*/
-		size_t i;
 		s_block_ptr block, new;
     void *newp;
-		/*if(!ptr)
-			return mm_malloc(size);*/
 		if(ptr){
 			block = ptr - BLOCK_SIZE;
-			/*if(block->size >= size){
-        if (block->size - size >= (BLOCK_SIZE + 4))
-					split_block (block,size);
-			} 
-			else
-			{*/
-        if (block->next && block->next->free && (block->size + BLOCK_SIZE + block->next->size) >= size){
+      if (block->next && block->next->free && (block->size + BLOCK_SIZE + block->next->size) >= size){
          fusion(block);
-				 if (block->size - size >= (BLOCK_SIZE + 4))
-					 split_block (block,size);
-			  } 
-				else {
+			//	 if (block->size - size >= (BLOCK_SIZE + 4))
+			//		 split_block (block,size);
+			 } 
+			else {
           newp = mm_malloc(size);
 				  if (!newp){
 					  return NULL;
@@ -113,15 +104,9 @@ void* mm_realloc(void* ptr, size_t size)
 					new = newp - BLOCK_SIZE;
 
 					/*COPYING DATA*/
-					//int *bcopy = block->ptr;
-					//int *newcopy = new->ptr;
-				  //for (i=0; i*4< block->size && i*4 < new->size; i++){
-					//	newcopy[i] = bcopy[i];
-					//}
 					memcpy(new->data, block->data, block->size);
 				  mm_free(ptr);
 				  return newp;
-			  //}
 			}
 		  return ptr;
 		}
