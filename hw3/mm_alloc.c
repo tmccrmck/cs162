@@ -91,10 +91,8 @@ void* mm_realloc(void* ptr, size_t size)
     void *newp;
 		if(ptr){
 			block = ptr - BLOCK_SIZE;
-      if (block->next && block->next->free && (block->size + BLOCK_SIZE + block->next->size) >= size){
+      if (block->next && block->next->free /*&& (block->size + BLOCK_SIZE + block->next->size) >= size*/){
          fusion(block);
-			//	 if (block->size - size >= (BLOCK_SIZE + 4))
-			//		 split_block (block,size);
 			 } 
 			else {
           newp = mm_malloc(size);
