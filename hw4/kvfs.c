@@ -47,7 +47,7 @@ static int kvfs_getattr(const char *path, struct stat *stbuf)
     if (!strcmp(path, "/")) {
         return lstat(mountparent, stbuf);
     }
-    return 0;
+    return stat(mountparent, stbuf);
 }
 
 static int kvfs_truncate(const char *path, off_t size)
@@ -55,10 +55,58 @@ static int kvfs_truncate(const char *path, off_t size)
     return 0;
 }
 
+static int kvfs_open(const char *path, struct fuse_file_info *fi)
+{  
+  int fd;
+  const char* superblock_file = "/.superblock";
+  char fname[strlen(mountparent) + strlen(superblock_file)];
+  strcpy(fname, mountparent);
+  strcat(fname,superblock_file);
+  
+  if(!strcmp(path, "/")){
+    return -ENOENT;
+  }
+
+  fd = open(fname, fi->flags);
+  fi->fh = fd;
+  return fd;
+}
+
+static int kvfs_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+{
+    const char* superblock_file = "/.superblock";
+    char fname[strlen(mountparent) + strlen(superblock_file)];
+    strcpy(fname, mountparent);
+    strcat(fname,superblock_file);
+    
+    if(!strcmp(path, "/")){
+      return -ENOENT;
+    }
+
+    return pwrite(fi->fh, buf, size, offset);
+}
+
+static int kvfs_read(const char *path, char *buf,size_t size, off_t offset, struct fuse_file_info *fi)
+{
+  if(!strcmp(path, "/")){
+    return -ENOENT;
+  }
+  
+  return pread(fi->fh, buf, size, offset);
+}
+
 struct fuse_operations kvfs_oper = {
     .getattr    = kvfs_getattr,
     .truncate   = kvfs_truncate,
-    .init       = kvfs_init
+    .init       = kvfs_init,
+    .open       = kvfs_open,
+    .write      = kvfs_write,
+    .read       = kvfs_read
+    /*
+    .access     = kvfs_access,
+    .mv         = kvfs_mv,
+    .fsync      = kvfs_fysnc  
+    */
 };
 
 
