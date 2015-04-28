@@ -44,10 +44,10 @@ static void* kvfs_init(struct fuse_conn_info *conn) {
 
 static int kvfs_getattr(const char *path, struct stat *stbuf)
 {
-    if (!strcmp(path, "/")) {
-        return lstat(mountparent, stbuf);
+    if (!strcmp(path, "/") || !strcmp(path, "/.superblock")) {
+        return -ENOENT;
     }
-    return stat(mountparent, stbuf);
+    return lstat(path, stbuf);
 }
 
 static int kvfs_truncate(const char *path, off_t size)
@@ -69,7 +69,7 @@ static int kvfs_open(const char *path, struct fuse_file_info *fi)
 
   fd = open(fname, fi->flags);
   fi->fh = fd;
-  return fd;
+  return 0;
 }
 
 static int kvfs_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
@@ -95,15 +95,47 @@ static int kvfs_read(const char *path, char *buf,size_t size, off_t offset, stru
   return pread(fi->fh, buf, size, offset);
 }
 
+static int kvfs_access(const char *path, int mask)
+{
+  const char* superblock_file = "/.superblock";
+  char fname[strlen(mountparent) + strlen(superblock_file)];
+  strcpy(fname, mountparent);
+  strcat(fname,superblock_file);
+
+  return access(path, mask);
+
+}
+
+static int kvfs_rename(const char *path, const char *newpath){
+
+  const char* superblock_file = "/.superblock";
+  char fname[strlen(mountparent) + strlen(superblock_file)];
+  char fnewpath[strlen(mountparent) + strlen(superblock_file)];
+  strcpy(fname, mountparent);
+  strcat(fname,superblock_file);
+  strcpy(fnewpath, mountparent);
+  strcat(fnewpath, superblock_file);
+
+  return rename(fname, fnewpath);
+
+}
+
+static int kvfs_mknod(const char *path, mode_t mode, dev_t rdev)
+{
+  int ret = mknod(path, mode ,rdev);
+  return 0;
+}
+
 struct fuse_operations kvfs_oper = {
     .getattr    = kvfs_getattr,
     .truncate   = kvfs_truncate,
     .init       = kvfs_init,
     .open       = kvfs_open,
     .write      = kvfs_write,
-    .read       = kvfs_read
-    /*
+    .read       = kvfs_read,
     .access     = kvfs_access,
+    .rename     = kvfs_rename
+    /*
     .mv         = kvfs_mv,
     .fsync      = kvfs_fysnc  
     */
