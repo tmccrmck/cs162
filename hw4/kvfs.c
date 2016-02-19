@@ -123,6 +123,7 @@ static int kvfs_rename(const char *path, const char *newpath){
 static int kvfs_mknod(const char *path, mode_t mode, dev_t rdev)
 {
   int ret = mknod(path, mode ,rdev);
+  ret += 0;
   return 0;
 }
 
@@ -134,7 +135,8 @@ struct fuse_operations kvfs_oper = {
     .write      = kvfs_write,
     .read       = kvfs_read,
     .access     = kvfs_access,
-    .rename     = kvfs_rename
+    .rename     = kvfs_rename,
+    .mknod      = kvfs_mknod
     /*
     .mv         = kvfs_mv,
     .fsync      = kvfs_fysnc  
